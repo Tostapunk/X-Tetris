@@ -6,9 +6,9 @@ ANSI C Tetris
 ![Multiplayer screenshot](https://user-images.githubusercontent.com/25140297/176733191-58e60225-d921-4947-ac1e-9481960c670f.png)
 
 ## How to use it
-### Compile
+### Build
 `$ make`
-### Run the game
+### Run
 `$ make run`
 ### Game commands
 | Player 1 key | Player 2 key | Description            |
