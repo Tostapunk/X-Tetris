@@ -19,7 +19,7 @@ const char NULL_CHAR = '\0';
  * because __func__ was added to the standard in C99 
  */  
 void error(const char* func, const char* text){
-	fprintf(stderr, "%s: %s\n",func, text);
+    fprintf(stderr, "%s: %s\n",func, text);
     abort();
 }
 
@@ -92,9 +92,9 @@ void printc(const char *color, const char *text) {
         case 'O':
             color = tetramino[T_TETRAMINO].color;
             break;
-		case GHOST_MINO:
-			color = ANSI_BGH_WHITE;
-			break;
+        case GHOST_MINO:
+            color = ANSI_BGH_WHITE;
+            break;
         }
         printf("%s%s%s", color, MINO, ANSI_COLOR_RESET);
     } else {
@@ -103,32 +103,32 @@ void printc(const char *color, const char *text) {
 }
 
 void printg(const char *file_name, const char *color){
-	char *dir = "graphics/";
-	char *ext = ".txt";
-	char *file_with_ext = malloc(sizeof(file_with_ext) * (strlen(dir)+strlen(file_name)+strlen(ext)));
-	char *line = NULL;
-	size_t len = 0;
-	FILE *fp;
+    char *dir = "graphics/";
+    char *ext = ".txt";
+    char *file_with_ext = malloc(sizeof(file_with_ext) * (strlen(dir)+strlen(file_name)+strlen(ext)));
+    char *line = NULL;
+    size_t len = 0;
+    FILE *fp;
 
-	strcpy(file_with_ext, dir);
-	strcat(file_with_ext, file_name);
-	strcat(file_with_ext, ext);
+    strcpy(file_with_ext, dir);
+    strcat(file_with_ext, file_name);
+    strcat(file_with_ext, ext);
 
-	fp = fopen(file_with_ext, "r");
-	if (fp == NULL){
-		error(__FUNCTION__, "Cannot open file");
-	}
+    fp = fopen(file_with_ext, "r");
+    if (fp == NULL){
+        error(__FUNCTION__, "Cannot open file");
+    }
 
-	while(getline(&line, &len, fp) != -1){
-		if(color == NULL){
-			printf("%s", line);
-		} else {
-			printc(color, line);
-		}
-	}
-	fclose(fp);
-	free(line);
-	free(file_with_ext);
+    while(getline(&line, &len, fp) != -1){
+        if(color == NULL){
+            printf("%s", line);
+        } else {
+            printc(color, line);
+        }
+    }
+    fclose(fp);
+    free(line);
+    free(file_with_ext);
 }
 
 char **create_array_of_array(int x, int y, bool_t empty_init) {
@@ -144,7 +144,7 @@ char **create_array_of_array(int x, int y, bool_t empty_init) {
         }
     }
     if (array == NULL) {
-		error(__FUNCTION__, "Memory allocation failed");
+        error(__FUNCTION__, "Memory allocation failed");
     }
     return array;
 }
@@ -181,32 +181,32 @@ void window_resize(int *saved_width) {
 }
 
 void move_sanitize(int *input, turn_t turn){
-	int ch = *input;
-	int special_key_init = 27;
-	if(ch == special_key_init) {
-			getchar();
-			ch = getchar();
-			if(turn == PLAYER_2){
-				switch(ch) {
-					case DOWN_ARROW:
-						*input = DOWN;
-						break;
-					case RIGHT_ARROW:
-						*input = RIGHT;
-						break;
-					case LEFT_ARROW:
-						*input = LEFT;
-						break;
-				}
+    int ch = *input;
+    int special_key_init = 27;
+    if(ch == special_key_init) {
+		getchar();
+		ch = getchar();
+		if(turn == PLAYER_2){
+			switch(ch) {
+				case DOWN_ARROW:
+					*input = DOWN;
+					break;
+				case RIGHT_ARROW:
+					*input = RIGHT;
+					break;
+				case LEFT_ARROW:
+					*input = LEFT;
+					break;
 			}
-			else {
-				*input = NULL_CHAR;
-			}
-	} else if (turn == PLAYER_2) {
-		if(ch == LEFT || ch == RIGHT || ch == DOWN || ch == ROTATE){
-			*input = NULL_CHAR;
-		} else if (ch == '-'){
-			*input = ROTATE;
 		}
-	}
+		else {
+			*input = NULL_CHAR;
+		}
+    } else if (turn == PLAYER_2) {
+        if(ch == LEFT || ch == RIGHT || ch == DOWN || ch == ROTATE){
+            *input = NULL_CHAR;
+        } else if (ch == '-'){
+            *input = ROTATE;
+        }
+    }
 }

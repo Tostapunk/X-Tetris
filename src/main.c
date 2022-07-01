@@ -18,19 +18,15 @@ const int MAX_TETRAMINO_SIDE = 4;
 const int MAX_TETRAMINOS_PREVIEW = 4;
 
 
-struct tetraminos tetramino[7] = {{I_TETRAMINO, {"####"}, 4, 1, ANSI_COLOR_CYN},
-                              {J_TETRAMINO, {"@  ",
-                                			 "@@@"}, 3, 2, ANSI_COLOR_BLU},
-                              {L_TETRAMINO, {"  B",
-                                			 "BBB"}, 3, 2, ANSI_COLOR_GRAY},
-                              {O_TETRAMINO, {"XX",
-                                			 "XX"}, 2, 2, ANSI_COLOR_YEL},
-                              {S_TETRAMINO, {" %%",
-                                			 "%% "}, 3, 2, ANSI_COLOR_GRN},
-                              {Z_TETRAMINO, {"ZZ ",
-                                			 " ZZ"}, 3, 2, ANSI_COLOR_RED},
-                              {T_TETRAMINO, {" O ",
-                                			 "OOO"}, 3, 2, ANSI_COLOR_MAG}};
+struct tetraminos tetramino[7] = {
+	{I_TETRAMINO, {"####"}, 4, 1, ANSI_COLOR_CYN},
+	{J_TETRAMINO, {"@  ", "@@@"}, 3, 2, ANSI_COLOR_BLU},
+	{L_TETRAMINO, {"  B", "BBB"}, 3, 2, ANSI_COLOR_GRAY},
+	{O_TETRAMINO, {"XX", "XX"}, 2, 2, ANSI_COLOR_YEL},
+	{S_TETRAMINO, {" %%", "%% "}, 3, 2, ANSI_COLOR_GRN},
+	{Z_TETRAMINO, {"ZZ ", " ZZ"}, 3, 2, ANSI_COLOR_RED},
+	{T_TETRAMINO, {" O ", "OOO"}, 3, 2, ANSI_COLOR_MAG}
+};
 
 void game_over(struct game_data *g) {
     int winner = -1;
@@ -63,7 +59,8 @@ void game_over(struct game_data *g) {
 
 void new_tetramino(struct game_data *g) {
 	int i;
-	struct tetraminos *curr_player_next_tetraminos = g->turn == PLAYER_2 && g->game_mode != SINGLE ? g->next_tetraminos2 : g->next_tetraminos1;
+	struct tetraminos *curr_player_next_tetraminos = 
+		g->turn == PLAYER_2 && g->game_mode != SINGLE ? g->next_tetraminos2 : g->next_tetraminos1;
 
     if (g->remaining_tetraminos == 0) {
         g->gameover = 1;
@@ -185,7 +182,9 @@ int collision_check(struct game_data *g) {
 	g->collision = 0;
     for (x = 0; x < g->current_tetramino.w; ++x) {
         for (y = 0; y < g->current_tetramino.h; ++y) {
-            if (g->y >= MATRIX_Y_MIN && g->current_tetramino.mino[y][x] != EMPTY_CHAR && ((g->x + x >= MATRIX_W || g->y + y >= MATRIX_H) || (matrix[g->y + y][g->x + x] != EMPTY_CHAR && matrix[g->y + y][g->x + x] != GHOST_MINO))) {
+            if (g->y >= MATRIX_Y_MIN && g->current_tetramino.mino[y][x] != EMPTY_CHAR &&
+					((g->x + x >= MATRIX_W || g->y + y >= MATRIX_H) || 
+					 (matrix[g->y + y][g->x + x] != EMPTY_CHAR && matrix[g->y + y][g->x + x] != GHOST_MINO))) {
                 if (g->turn != PLAYER_CPU && g->y < g->current_tetramino.h/2) {
                     g->gameover = 1;
 					g->collision = 1;
@@ -239,7 +238,7 @@ bool_t rotate_fix(struct game_data *g, char **matrix) {
             } else {
 				is_fixable = FALSE;
 			}
-        	count = 0;
+			count = 0;
         } 
         /* Checks for a collision on the right side */
         if (g->x > MATRIX_X_MIN) {
@@ -468,7 +467,7 @@ void matrix(struct game_data *g) {
 	if(!g->gameover && g->collision && g->move == DOWN){
 		fullrow_check(g, aux_matrix);
 		if(g->turn != PLAYER_CPU){
-    		fullrow_check(g, aux_matrix);
+			fullrow_check(g, aux_matrix);
 			copy_array_of_array(aux_matrix, matrix, MATRIX_W, MATRIX_H);
 			if (g->game_mode != SINGLE) {
 				g->turn = !g->turn;
@@ -533,7 +532,7 @@ void cpu_strategy(struct game_data *g) {
         }
         for (j = 0; j < MATRIX_W; ++j){
 			g->move = DOWN;
-    		g->collision = 0;
+			g->collision = 0;
 			g->x = j;
 			g->y = (MATRIX_Y_MIN - g->current_tetramino.h/2)-1;
 			hard_drop(g, TRUE);
@@ -607,23 +606,23 @@ void run(struct game_data *g) {
             }
             break;
         case DOWN:
-    		g->move = DOWN;
+			g->move = DOWN;
 			drop(g);
             break;
         case ROTATE:
             g->move = ROTATE;
 			if (g->y >= MATRIX_Y_MIN-1){
-            	rotate(g, TRUE);
+				rotate(g, TRUE);
 			}
             break;
         case HARD_DROP:
-    		g->move = DOWN;
+			g->move = DOWN;
 			hard_drop(g, TRUE);
             break;
         case CLEAR:
             free_array_of_array(g->matrix1, MATRIX_H);
             if (g->game_mode != SINGLE) {
-            	free_array_of_array(g->matrix2, MATRIX_H);
+				free_array_of_array(g->matrix2, MATRIX_H);
             }
             init(g);
             break;
@@ -641,7 +640,7 @@ void run(struct game_data *g) {
 			window_resize(&g->window_w);
 			time_float(&time_end);
 			if ((time_end - time_beg) >= fall_speed(g)) {
-    			g->move = DOWN;
+				g->move = DOWN;
 				drop(g);
 				matrix(g);
 				time_beg = time_end;
@@ -676,7 +675,7 @@ void title(struct game_data *g) {
             init(g);
             run(g);
             free_array_of_array(g->matrix1, MATRIX_H);
-        	print_title();
+			print_title();
             break;
         case '2':
             g->game_mode = MULTI;
@@ -684,7 +683,7 @@ void title(struct game_data *g) {
             run(g);
             free_array_of_array(g->matrix1, MATRIX_H);
             free_array_of_array(g->matrix2, MATRIX_H);
-        	print_title();
+			print_title();
             break;
         case '3':
             g->game_mode = CPU;
@@ -692,12 +691,12 @@ void title(struct game_data *g) {
             run(g);
             free_array_of_array(g->matrix1, MATRIX_H);
             free_array_of_array(g->matrix2, MATRIX_H);
-        	print_title();
+			print_title();
             break;
         case '4':
             help();
             while (getchar() != '\n');
-        	print_title();
+			print_title();
             break;
         case '5':
             term_setup(T_RESTORE);
